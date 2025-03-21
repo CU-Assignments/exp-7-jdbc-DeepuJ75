@@ -1,0 +1,35 @@
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class StudentDAO {
+    private static final String URL = "jdbc:mysql://localhost:3306/your_database";
+    private static final String USER = "root";
+    private static final String PASSWORD = "your_password";
+
+    public void addStudent(Student student) throws SQLException {
+        String query = "INSERT INTO Student (StudentID, Name, Department, Marks) VALUES (?, ?, ?, ?)";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, student.getStudentID());
+            stmt.setString(2, student.getName());
+            stmt.setString(3, student.getDepartment());
+            stmt.setDouble(4, student.getMarks());
+            stmt.executeUpdate();
+        }
+    }
+
+    public List<Student> getAllStudents() throws SQLException {
+        List<Student> students = new ArrayList<>();
+        String query = "SELECT * FROM Student";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                students.add(new Student(rs.getInt("StudentID"), rs.getString("Name"),
+                        rs.getString("Department"), rs.getDouble("Marks")));
+            }
+        }
+        return students;
+    }
+}
