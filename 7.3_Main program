@@ -1,0 +1,21 @@
+import java.sql.SQLException;
+import java.util.Scanner;
+
+public class StudentManagement {
+    public static void main(String[] args) {
+        StudentDAO dao = new StudentDAO();
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            dao.addStudent(new Student(1, "John Doe", "CSE", 90));
+            System.out.println("Student Added!");
+
+            System.out.println("Student Records:");
+            for (Student s : dao.getAllStudents()) {
+                System.out.println(s.getStudentID() + " " + s.getName() + " " + s.getDepartment() + " " + s.getMarks());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
